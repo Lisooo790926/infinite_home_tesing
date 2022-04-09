@@ -1,5 +1,6 @@
 package com.infinities.library.controllers;
 
+import com.infinities.library.datas.BookUpdateData;
 import com.infinities.library.models.BookModel;
 import com.infinities.library.datas.Response;
 import com.infinities.library.services.BookService;
@@ -46,11 +47,11 @@ public class BookController {
     }
 
     @PostMapping(value = "/update")
-    public ResponseEntity<Response> updateBook(@RequestBody final BookModel bookModel) {
+    public ResponseEntity<Response> updateBook(@RequestBody final BookUpdateData updateBook) {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
-                        .data(Map.of("updatedBook", bookService.updateBook(bookModel)))
+                        .data(Map.of("updatedBook", bookService.updateBook(updateBook)))
                         .message("update the book successfully")
                         .status(HttpStatus.OK)
                         .build()

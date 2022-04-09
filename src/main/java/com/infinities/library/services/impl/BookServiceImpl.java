@@ -1,5 +1,6 @@
 package com.infinities.library.services.impl;
 
+import com.infinities.library.datas.BookUpdateData;
 import com.infinities.library.exception.BookAlreadyExistedException;
 import com.infinities.library.exception.BookNotFoundException;
 import com.infinities.library.models.BookModel;
@@ -8,6 +9,7 @@ import com.infinities.library.services.BookService;
 import com.infinities.library.validator.BookValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,20 +42,22 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookModel updateBook(final BookModel bookModel) {
+    public BookModel updateBook(final BookUpdateData updateData) {
 
-        final BookModel toUpdate = getBookRepository().findById(bookModel.getIsbn())
-                .orElse(getBookRepository().findByName(bookModel.getName()));
+        final BookModel toUpdate = Objects.nonNull(updateData.getIsbn()) ?
+                getBookRepository().findById(updateData.getIsbn())
+                        .orElse(getBookRepository().findByName(updateData.getName())) :
+                getBookRepository().findByName(updateData.getName());
 
         if (Objects.isNull(toUpdate)) {
-            log.error("Could not update the book with isbn {} or name {}", bookModel.getIsbn(), bookModel.getName());
+            log.error("Could not update the book with isbn {} or name {}", updateData.getIsbn(), updateData.getName());
             throw new BookNotFoundException("There is no book with current name or ISBN");
         }
 
         // validator to verify
-        if (getBookValidator().isAvailableForUpdate(bookModel, toUpdate)) {
-            log.info("Update the book with book {}", bookModel.getIsbn());
-            return getBookRepository().save(bookModel);
+        if (getBookValidator().isAvailableForUpdate(updateData, toUpdate)) {
+            log.info("Update the book with book {}", toUpdate.getIsbn());
+            return getBookRepository().save(toUpdate);
         }
 
         throw new IllegalArgumentException("At least put one attribute to update");
@@ -61,9 +65,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public boolean deleteBook(final Long isbn) {
-        log.info("delete the book with book isbn {}", isbn);
-        getBookRepository().deleteById(isbn);
-        return true;
+        try {
+            log.info("delete the book with book isbn {}", isbn);
+            getBookRepository().deleteById(isbn);
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            log.error("There is no book with isbn {}", isbn);
+            throw new IllegalArgumentException("There is no book with given isbn");
+        }
+
+
     }
 
     @Override
