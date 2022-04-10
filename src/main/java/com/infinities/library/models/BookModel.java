@@ -43,6 +43,6 @@ public class BookModel {
 
     @Column(length = 32, columnDefinition = "varchar(32) default 'TWD'")
     @Enumerated(EnumType.STRING)
-    private CurrencyModel currency;
+    private CurrencyModel currency = CurrencyModel.TWD;
 
 }
