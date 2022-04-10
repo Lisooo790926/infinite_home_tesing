@@ -1,9 +1,32 @@
 ## InfinitiesSoft Take Home
-1. Design a library system including CRUD functionalities
+1. Design a library system including CRUD functionalities and test cases
 2. Wrap as Docker container
 3. Push to gitHub 
 
-## Running Steps
+## Test Cases Design
+Make below classes coverage to 100% and additional test cases
+- **BookService** additional test cases
+    1. getAllBooks --> no additional
+    2. createBook 
+       - If book existed
+       - If missing attributes
+    3. updateBook
+       - If there is no updated attribute
+       - If book doesn't exist
+    4. deleteBook
+       - If book doesn't exist
+- **BookValidator** additional test cases
+   1. isAvailableForUpdate --> no additional
+   2. isAvailableForCreate --> no additional
+
+## Test Steps
+1. `cd ./infinity_home_tesing`
+2. run `mvn test`
+
+## Test Result
+TODO
+
+## Server Setup Steps (with Docker)
 1. clone this project
 2. `cd ./infinity_home_tesing`
 2. run `mvn install`
@@ -15,7 +38,7 @@
    ```
 6. Use postman to test CRUD functions
 
-## Postman Testing result
+## Postman Testing Result
 0. I used Response Object to unify all response\
    ```json
    // All response format including exception
@@ -96,7 +119,7 @@
        }
    }
    
-   // Example Response if name is existed
+   // Example Response if name existed
    {
        "status": 500,
        "message": "Book with current Name already exited, please use update"
@@ -170,19 +193,3 @@
    }
    
    ```
-
-## Test Cases Design
-Make below classes coverage to 100% and additional test cases
-- **BookService** additional test cases
-    1. getAllBooks --> no additional
-    2. createBook 
-       - If book existed
-       - If missing attributes
-    3. updateBook
-       - If there is no updated attribute
-       - If book doesn't exist
-    4. deleteBook
-       - If book doesn't exist
-- **BookValidator** additional test cases
-   1. isAvailableForUpdate --> no additional
-   2. isAvailableForCreate --> no additional
