@@ -29,7 +29,7 @@ public class BookController {
                         .timeStamp(now())
                         .data(Map.of("books", bookService.getAllBooks()))
                         .message("fetching all books")
-                        .status(HttpStatus.OK)
+                        .status(HttpStatus.OK.value())
                         .build()
         );
     }
@@ -41,7 +41,7 @@ public class BookController {
                         .timeStamp(now())
                         .data(Map.of("createdBook", bookService.createBook(bookModel)))
                         .message("create the book successfully")
-                        .status(HttpStatus.OK)
+                        .status(HttpStatus.OK.value())
                         .build()
         );
     }
@@ -53,18 +53,18 @@ public class BookController {
                         .timeStamp(now())
                         .data(Map.of("updatedBook", bookService.updateBook(updateBook)))
                         .message("update the book successfully")
-                        .status(HttpStatus.OK)
+                        .status(HttpStatus.OK.value())
                         .build()
         );
     }
 
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<Response> deleteBook(@RequestParam("isbn") final Long isbn) {
+    public ResponseEntity<Response> deleteBook(@RequestParam(value = "isbn", required = false) final Long isbn) {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
                         .data(Map.of("isDeletedBook", bookService.deleteBook(isbn)))
-                        .status(HttpStatus.OK)
+                        .status(HttpStatus.OK.value())
                         .build()
         );
     }

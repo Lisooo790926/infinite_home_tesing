@@ -15,9 +15,174 @@
    ```
 6. Use postman to test CRUD functions
 
-## Testing result
-TODO
+## Postman Testing result
+0. I used Response Object to unify all response\
+   ```json
+   // All response format including exception
+   {
+      "timeStamp": "Current time stamp",
+      "status": "Current Status code",
+      "message": "Processing Message",
+      "data": {"Data_key": "Data_value"}
+   }
+   ```
+1. `/book/all`\
+   Fetching all books with all details, there are two books in default (TestBook, TestBook2)
+   ```json
+   // Example Request
+   // Nothing
+   
+   // Example Response
+   {
+       "timeStamp": "2022-04-10T00:40:43.134813",
+       "status": 200,
+       "message": "fetching all books",
+       "data": {
+           "books": [
+               {
+                   "isbn": 200,
+                   "name": "TestBook",
+                   "author": "TestAuthor",
+                   "translator": "TestTranslator",
+                   "publisher": "TestPublisher",
+                   "publishDate": null,
+                   "price": 20.00,
+                   "currency": "TWD"
+               },
+               {
+                   "isbn": 201,
+                   "name": "TestBook2",
+                   "author": "TestAuthor",
+                   "translator": "TestTranslator",
+                   "publisher": "TestPublisher",
+                   "publishDate": "2022-04-09T16:40:08.000+00:00",
+                   "price": 25.00,
+                   "currency": "USD"
+               }
+           ]
+       }
+   } 
+   ```
+2. `/book/create`\
+   Create the book with name TestBook4, name, author, publisher, price are mandatory
+   ```json
+   // Example Request 
+   {
+       "name": "TestBook4",
+       "author": "TestAuthor",
+       "translator": "TestTranslator",
+       "publisher": "TestPublisher",
+       "publishDate": "2022-04-09T14:53:34.000+00:00",
+       "price": 25.00,
+       "currency": "USD"
+   }
+   
+   // Example Response if success
+   {
+       "timeStamp": "2022-04-09T16:40:27.385319",
+       "status": 200,
+       "message": "create the book successfully",
+       "data": {
+           "createdBook": {
+               "isbn": 1,
+               "name": "TestBook4",
+               "author": "TestAuthor",
+               "translator": "TestTranslator",
+               "publisher": "TestPublisher",
+               "publishDate": "2022-04-09T14:53:34.000+00:00",
+               "price": 25.00,
+               "currency": "USD"
+           }
+       }
+   }
+   
+   // Example Response if name is existed
+   {
+       "status": 500,
+       "message": "Book with current Name already exited, please use update"
+   }
+   
+   // Example Response if missing attribute
+   {
+       "status": 500,
+       "message": "not-null property references a null or transient value : com.infinities.library.models.BookModel.author; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : com.infinities.library.models.BookModel.author"
+   }
+   ```
+3. `/book/update`\
+   Update the book with given name or isbn
+   ```json
+   // Example Request for updating the author 
+   {
+       "name": "TestBook4",
+       "author": "TestAuthor222"
+   }
+   
+   // Example Response
+   {
+       "timeStamp": "2022-04-10T00:24:23.529541",
+       "status": "OK",
+       "message": "update the book successfully",
+       "data": {
+           "updatedBook": {
+               "isbn": 1,
+               "name": "TestBook4",
+               "author": "TestAuthor222",
+               "translator": "TestTranslator",
+               "publisher": "TestPublisher",
+               "publishDate": "2022-04-09T14:53:34.000+00:00",
+               "price": 25.00,
+               "currency": "USD"
+           }
+       }
+   }
+   
+   // Example Response if book doesn't exist
+   {
+       "status": 500,
+       "message": "There is no book with current name or ISBN"
+   }
+   
+   // Example Response if there is no updated attriubutes
+   {
+       "status": 500,
+       "message": "At least put one attribute to update"
+   }
+   ```
+4. `/book/delete`\
+   Delete the book with isbn
+   ```json
+   // Example Request Params 
+   isbn:1
+   
+   // Example Response if successfully update
+   {
+       "timeStamp": "2022-04-10T09:08:12.01728",
+       "status": 200,
+       "data": {
+           "isDeletedBook": true
+       }
+   }
+   
+   // Example Response if there is no book with given isbn
+   {
+       "status": 500,
+       "message": "There is no book with given isbn"
+   }
+   
+   ```
 
 ## Test Cases Design
-TODO 
-
+Make below classes coverage to 100% and additional test cases
+- **BookService** additional test cases
+    1. getAllBooks --> no additional
+    2. createBook 
+       - If book existed
+       - If missing attributes
+    3. updateBook
+       - If there is no updated attribute
+       - If book doesn't exist
+    4. deleteBook
+       - If book doesn't exist
+- **BookValidator** additional test cases
+   1. isAvailableForUpdate --> no additional
+   2. isAvailableForCreate --> no additional
