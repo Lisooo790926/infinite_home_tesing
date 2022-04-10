@@ -24,7 +24,7 @@ Make below classes coverage to 100% and additional test cases
 2. run `mvn test`
 
 ## Test Result
-TODO
+![image](https://user-images.githubusercontent.com/48560984/162599288-b706f127-8539-4923-8cad-9bed566a58d3.png)
 
 ## Server Setup Steps (with Docker)
 1. clone this project
